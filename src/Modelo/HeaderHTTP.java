@@ -1,29 +1,27 @@
 package Modelo;
 
-public class HeaderParser {
-    private String quebraLinha = "\n\r";
+public class HeaderHTTP {
     private String method;
     private String path;
     private String httpVersion;
     
-    private enum CodigosHTTP {
-        OK(200),
-        BAD_REQUEST(400),
-        NOT_FOUND(404),
-        INTERNAL_ERROR(500);
-        
-        public int NumCod;
-        
-        CodigosHTTP(int NumCod) {
-            this.NumCod=NumCod;
-        }
-    }
-    
-    public HeaderParser(String strRequest) {
+    public HeaderHTTP(String strRequest) {
         String[] arrayRequest = strRequest.split(" ");
         this.method = arrayRequest[0];
-        this.path = arrayRequest[1];
+        this.path = arrayRequest[1]; if(this.path.equals("/")){this.path = "/index.html";}
         this.httpVersion = arrayRequest[2];
+    }
+    
+    public String getPath() {
+        return this.path;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public String getHttpVersion() {
+        return httpVersion;
     }
     
     public void LogReguest() {

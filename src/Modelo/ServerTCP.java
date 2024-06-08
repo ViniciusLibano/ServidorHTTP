@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class TCPServer {
+public class ServerTCP {
     private final Integer PORT = 8082;
     private ServerSocket servidor;
     
@@ -21,7 +21,7 @@ public class TCPServer {
                 Socket cliente = servidor.accept();
                 System.out.println("Cliente conectado: " + cliente.getLocalAddress().getHostAddress()+":"+cliente.getLocalPort());
                 
-                Thread t = new Thread(new HTTPHandler(cliente));
+                Thread t = new Thread(new HandlerHTTP(cliente));
                 t.start();
             }
             
@@ -30,12 +30,12 @@ public class TCPServer {
         }
     }
     
-    private class HTTPHandler implements Runnable {
+    private class HandlerHTTP implements Runnable {
         private final Socket socket;
         private InputStream in;
         private OutputStream out;
         
-        protected HTTPHandler(Socket socket) {
+        protected HandlerHTTP(Socket socket) {
             this.socket = socket;
         }
         
@@ -45,25 +45,10 @@ public class TCPServer {
                 in = socket.getInputStream();
                 out = socket.getOutputStream();
                 
-                HeaderParser parser = new HeaderParser(new BufferedReader(new InputStreamReader(in)).readLine());
-                parser.LogReguest();
+                HeaderHTTP header = new HeaderHTTP(new BufferedReader(new InputStreamReader(in)).readLine());
+                RespostaHTTP resposta =  new RespostaHTTP(header);
                 
-                String html = 
-                        "<html>"+
-                        "<head><link rel=\"stylesheet\" href=\"styles.css\"><title>Teste</title></head>"+
-                        "<body><h1>Teste</h1></body>"+
-                        "</html>";
-                
-                final String quebraLinha = "\n\r";
-                
-                String resposta = 
-                        "HTTP/1.1 200 OK"+quebraLinha+ //status [http_version codigo mensagem]
-                        "Content-Lenght: " + html.getBytes().length + quebraLinha+//header
-                        quebraLinha+
-                        html+
-                        quebraLinha+quebraLinha;
-                
-                out.write(resposta.getBytes());
+                out.write(resposta.Reposta());
                 
                 in.close();
                 out.close();

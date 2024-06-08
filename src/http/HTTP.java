@@ -1,11 +1,11 @@
 package http;
 
-import Modelo.TCPServer;
+import Modelo.ServerTCP;
 
 public class HTTP {
 
     public static void main(String[] args) {
-        TCPServer srv = new TCPServer();
+        ServerTCP srv = new ServerTCP();
         srv.iniciar();
     }
     
