@@ -1,5 +1,6 @@
 package Modelo;
 
+import Enums.CodigosHTTP;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,15 +21,22 @@ public class RespostaHTTP {
             while (reader.ready()) {
                 this.file += reader.readLine();
             }
-            
-            System.out.println(this.file);
     }
     
-    public byte[] Reposta() throws IOException {
-        this.readFile();
+    public byte[] Reposta() {
+        String resposta = "";
         
-        String resposta = header.getHttpVersion() + " " + "200" + this.br + "Content-Length: " + this.file.getBytes().length + this.br + this.br + this.file + this.br + this.br;
+        try { 
+            this.readFile();
+        
+            resposta = header.getHttpVersion() + " " + CodigosHTTP.OK + this.br + "Content-Length: " + this.file.getBytes().length + this.br + this.br + this.file + this.br + this.br;
 
+            
+        } catch (IOException e) {
+            String erro = "<html><head><title>Erro 404</title></head><body><h1>Erro 404</h1><p>" + e.getMessage() +"</p></body></html>";
+            resposta = header.getHttpVersion() + " " + CodigosHTTP.NOT_FOUND + this.br + "Content-Length " + erro.getBytes().length + this.br + this.br + erro + this.br + this.br;
+        }
+        
         return resposta.getBytes();
     }
 }
