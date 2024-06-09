@@ -6,17 +6,17 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class RespostaHTTP {
-    private final String br = "\n\r";
-    private HeaderHTTP header;
+    private final String endLine = "\n\r";
+    private RequestHTTP request;
     private String file = "";
     
-    public RespostaHTTP(HeaderHTTP header) {
-        this.header = header;
+    public RespostaHTTP(RequestHTTP header) {
+        this.request = header;
     }
     
     private void readFile()
         throws IOException {
-            BufferedReader reader = new BufferedReader(new FileReader("src/www" + header.getPath()));
+            BufferedReader reader = new BufferedReader(new FileReader("src/www" + request.getPath()));
             
             while (reader.ready()) {
                 this.file += reader.readLine();
@@ -29,12 +29,12 @@ public class RespostaHTTP {
         try { 
             this.readFile();
         
-            resposta = header.getHttpVersion() + " " + CodigosHTTP.OK + this.br + "Content-Length: " + this.file.getBytes().length + this.br + this.br + this.file + this.br + this.br;
+            resposta = request.getHttpv()+ " " + CodigosHTTP.OK + this.endLine + "Content-Length: " + this.file.getBytes().length + this.endLine + this.endLine + this.file + this.endLine + this.endLine;
 
             
         } catch (IOException e) {
             String erro = "<html><head><title>Erro 404</title></head><body><h1>Erro 404</h1><p>" + e.getMessage() +"</p></body></html>";
-            resposta = header.getHttpVersion() + " " + CodigosHTTP.NOT_FOUND + this.br + "Content-Length " + erro.getBytes().length + this.br + this.br + erro + this.br + this.br;
+            resposta = request.getHttpv()+ " " + CodigosHTTP.NOT_FOUND + this.endLine + "Content-Length " + erro.getBytes().length + this.endLine + this.endLine + erro + this.endLine + this.endLine;
         }
         
         return resposta.getBytes();

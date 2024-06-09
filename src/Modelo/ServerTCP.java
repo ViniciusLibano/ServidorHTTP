@@ -1,14 +1,10 @@
 package Modelo;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ServerTCP {
     private final Integer PORT = 8082;
@@ -34,6 +30,7 @@ public class ServerTCP {
     
     private class HandlerHTTP implements Runnable {
         private final Socket socket;
+        private final Integer limiteRequest = 800;
         private InputStream in;
         private OutputStream out;
         
@@ -44,22 +41,23 @@ public class ServerTCP {
         @Override
         public void run() {
             try {
-                in = socket.getInputStream();
-                out = socket.getOutputStream();
+                in = socket.getInputStream(); out = socket.getOutputStream();
                 
-                HeaderHTTP header = new HeaderHTTP(new BufferedReader(new InputStreamReader(in)).readLine());
-                RespostaHTTP resposta =  new RespostaHTTP(header);
-                header.LogReguest();
+                String headers = "";
+                for (int i = 0; i < this.limiteRequest; i++) {
+                    headers+=(char)(in.read());
+                }
                 
+                RequestHTTP request = new RequestHTTP(headers);
+                request.logHeaders();
+                RespostaHTTP resposta = new RespostaHTTP(request);
                 out.write(resposta.Reposta());
                 
-                in.close();
-                out.close();
-                socket.close();
+                in.close(); out.close(); socket.close();
             } catch (IOException e) {
                 System.out.println("Erro: "+e.getMessage());
             } catch (Exception ex) {
-                Logger.getLogger(ServerTCP.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Erro: "+ex.getMessage());
             }
         }
     }
