@@ -17,7 +17,7 @@ public class HttpServer {
         LOGGER.info("Iniciando servidor");
 
         ServerListenerThread servidor;
-        GerenciadorConfig.Instancia().carregarArquivoConfig("httpserver\\src\\main\\resources\\http.json");
+        GerenciadorConfig.Instancia().carregarArquivoConfig("C:\\dev\\ServidorHTTP\\httpserver\\src\\main\\resources\\http.json");
         Configuracao conf = GerenciadorConfig.Instancia().configuracaoAtual();
         
         LOGGER.info("Porta: " + conf.getPort());
