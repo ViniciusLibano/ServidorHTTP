@@ -40,6 +40,7 @@ public class HttpConnectionWorkerThread extends Thread {
             
             LOGGER.info("Fim do processamento da conexão.");
         } catch (IOException e) {
+            LOGGER.info("Erro", e);
             e.printStackTrace();
         } finally {
             if (inputStream != null ) {
