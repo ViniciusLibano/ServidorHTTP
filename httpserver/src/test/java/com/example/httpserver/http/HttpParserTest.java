@@ -37,6 +37,7 @@ public class HttpParserTest {
         
         
         assertEquals(request.getMethod(), HttpMethod.GET);
+        assertEquals(request.getRequestTarget(), "/");
     }
 
     @Test
@@ -96,7 +97,7 @@ public class HttpParserTest {
 
     private InputStream gerarRequest() {
         String valorTeste = 
-            "GET /hello.html HTTP/1.1\r\n"+
+            "GET / HTTP/1.1\r\n"+
             "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"+
             "Host: www.tutorialspoint.com\r\n"+
             "Accept-Language: en-us\r\n"+
